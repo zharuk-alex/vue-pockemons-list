@@ -6,7 +6,6 @@
           class="text-h3 my-10 text-center text-error"
           v-text="`'${name}' - ${error}`"
         ></h3>
-
         <v-btn
           class="mx-auto"
           color="primary"
@@ -32,12 +31,21 @@
             </v-card-text>
           </v-card>
         </v-col>
-        <v-col v-for="feature in pokemonFeatureList" :key="feature?.title">
+        <v-col
+          v-for="feature in pokemonFeatureList"
+          :key="feature?.title"
+          cols="12"
+          sm="6"
+          md="3"
+        >
           <h5 class="text-h5 text-center" v-text="feature?.title"></h5>
           <v-list
             density="compact"
-            style="background-color: transparent; overflow-y: hidden"
-            height="300"
+            style="
+              background-color: transparent;
+              overflow-y: hidden;
+              max-height: 300;
+            "
           >
             <v-list-item v-for="item in feature.data.slice(0, 7)" :key="item">
               <v-chip>{{ item }}</v-chip>
@@ -149,10 +157,14 @@
         if (!name) {
           return;
         }
-        !!this.pokemonDetail(name) || (await this.fetchSinglePokemon(name));
+
+        let pokemon = this.pokemonDetail(name);
+        if (!pokemon) {
+          await this.fetchSinglePokemon(name);
+        }
         const nameIsID = /^-?\d+$/.test(name);
         if (nameIsID) {
-          let pokemon = this.pokemonDetail(name);
+          pokemon = this.pokemonDetail(name);
           this.$router.replace({ params: { name: pokemon.name } });
         }
         this.name = name;

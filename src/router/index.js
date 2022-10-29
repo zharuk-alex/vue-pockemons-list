@@ -34,7 +34,7 @@ const routes = [
     beforeEnter: (async (to, from, next) => {
       const { name } = to.params
       store.commit('setError', null)
-      await store.dispatch('pokemons/fetchSinglePokemon', name);
+      !!store.getters['pokemons/pokemonDetail'](name) || (await store.dispatch('pokemons/fetchSinglePokemon', name));
       next()
     }),
     meta: {
