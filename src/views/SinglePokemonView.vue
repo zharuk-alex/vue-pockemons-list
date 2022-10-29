@@ -1,0 +1,167 @@
+<template>
+  <v-card style="background: rgba(255, 255, 255, 0.8)">
+    <v-card-text>
+      <div v-if="error" class="d-flex flex-column">
+        <h3
+          class="text-h3 my-10 text-center text-error"
+          v-text="`'${name}' - ${error}`"
+        ></h3>
+
+        <v-btn
+          class="mx-auto"
+          color="primary"
+          variant="text"
+          to="/pokemons"
+          v-text="'Show all pokemons'"
+        ></v-btn>
+      </div>
+
+      <v-row v-else>
+        <v-col cols="12" md="3">
+          <v-card elevation="4" class="mx-center">
+            <v-card-text>
+              <h4 class="text-h4 my-5 text-center" v-text="pokemon?.name"></h4>
+              <v-img
+                class="mx-auto"
+                contain
+                height="270"
+                :src="pokemon?.src || imageDefaultSrc"
+              >
+              </v-img>
+              <v-card-title>#{{ pokemon?.id }}</v-card-title>
+            </v-card-text>
+          </v-card>
+        </v-col>
+        <v-col v-for="feature in pokemonFeatureList" :key="feature?.title">
+          <h5 class="text-h5 text-center" v-text="feature?.title"></h5>
+          <v-list
+            density="compact"
+            style="background-color: transparent; overflow-y: hidden"
+            height="300"
+          >
+            <v-list-item v-for="item in feature.data.slice(0, 7)" :key="item">
+              <v-chip>{{ item }}</v-chip>
+            </v-list-item>
+          </v-list>
+          <div v-if="feature.data.length > 7">
+            <v-list-item>...</v-list-item>
+            <v-btn
+              class="mx-auto"
+              color="primary"
+              variant="text"
+              @click="showDialog(feature)"
+              v-text="`Show all ${feature.title}`"
+            ></v-btn>
+          </div>
+        </v-col>
+      </v-row>
+    </v-card-text>
+  </v-card>
+  <v-dialog v-model="dialog" scrollable>
+    <v-card style="max-width: 600px; width: auto" v-if="!!dialogItem">
+      <v-card-title class="d-flex align-center">
+        <span>{{ dialogItem.title }}</span>
+        <v-spacer></v-spacer>
+        <v-icon large color="primary" @click.stop="closeDialog">
+          mdi-close-circle
+        </v-icon>
+      </v-card-title>
+      <v-divider></v-divider>
+      <v-card-text style="max-height: calc(100vh - 200px)">
+        <v-chip v-for="item in dialogItem.data" :key="item" class="ma-2">
+          {{ item }}
+        </v-chip>
+      </v-card-text>
+    </v-card>
+  </v-dialog>
+</template>
+
+<script>
+  import { createNamespacedHelpers } from 'vuex';
+  const { mapGetters, mapActions, mapMutations } =
+    createNamespacedHelpers('pokemons');
+
+  export default {
+    name: 'SinglePokemonView',
+    data: () => ({
+      name: '',
+      listStatusModel: {},
+      dialog: false,
+      dialogItem: {},
+    }),
+    computed: {
+      ...mapGetters(['pokemonDetail']),
+      error() {
+        return this.$store.getters.error;
+      },
+
+      pokemon() {
+        return this.pokemonDetail(this.name);
+      },
+      imageDefaultSrc() {
+        return `https://via.placeholder.com/200`;
+      },
+      AbilitiesList() {
+        let abilities = this.pokemon?.abilities || [];
+        return {
+          title: 'Abilities',
+          value: 'abilities',
+          data: abilities.map((a) => a.ability?.name),
+        };
+      },
+      StatsList() {
+        let stats = this.pokemon?.stats || [];
+        return {
+          title: 'Stats',
+          value: 'stats',
+          data: stats.map((a) => a.stat?.name),
+        };
+      },
+      MovesList() {
+        let moves = this.pokemon?.moves || [];
+        return {
+          title: 'Moves',
+          value: 'moves',
+          data: moves.map((a) => a.move?.name),
+        };
+      },
+      pokemonFeatureList() {
+        return [this.AbilitiesList, this.StatsList, this.MovesList];
+      },
+    },
+    beforeMount() {
+      this.name = this.$route.params.name;
+    },
+    methods: {
+      ...mapMutations(['setPokemonDetail']),
+      ...mapActions(['fetchSinglePokemon']),
+      showDialog(item) {
+        this.dialog = true;
+        this.dialogItem = item;
+      },
+      closeDialog() {
+        this.dialog = false;
+        setTimeout(() => {
+          this.dialogItem = {};
+        }, 1000);
+      },
+      async onRouteParamChange(name) {
+        if (!name) {
+          return;
+        }
+        !!this.pokemonDetail(name) || (await this.fetchSinglePokemon(name));
+        const nameIsID = /^-?\d+$/.test(name);
+        if (nameIsID) {
+          let pokemon = this.pokemonDetail(name);
+          this.$router.replace({ params: { name: pokemon.name } });
+        }
+        this.name = name;
+      },
+    },
+    watch: {
+      '$route.params.name'(name) {
+        this.onRouteParamChange(name);
+      },
+    },
+  };
+</script>
