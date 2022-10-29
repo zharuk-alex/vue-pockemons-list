@@ -42,13 +42,20 @@
           <v-list
             density="compact"
             style="
-              background-color: transparent;
+              background-color: rgba(0, 0, 0, 0.1);
               overflow-y: hidden;
               max-height: 300;
             "
+            elevation="1"
           >
             <v-list-item v-for="item in feature.data.slice(0, 7)" :key="item">
-              <v-chip>{{ item }}</v-chip>
+              <v-list-item-content class="d-flex w-100">
+                <span v-text="item?.name"></span>
+                <v-spacer></v-spacer>
+                <v-chip size="x-small" v-if="item?.value">{{
+                  item.value
+                }}</v-chip>
+              </v-list-item-content>
             </v-list-item>
           </v-list>
           <div v-if="feature.data.length > 7">
@@ -114,7 +121,7 @@
         return {
           title: 'Abilities',
           value: 'abilities',
-          data: abilities.map((a) => a.ability?.name),
+          data: abilities.map((a) => ({ name: a.ability?.name })),
         };
       },
       StatsList() {
@@ -122,7 +129,7 @@
         return {
           title: 'Stats',
           value: 'stats',
-          data: stats.map((a) => a.stat?.name),
+          data: stats.map((a) => ({ name: a.stat?.name, value: a.base_stat })),
         };
       },
       MovesList() {
@@ -130,7 +137,7 @@
         return {
           title: 'Moves',
           value: 'moves',
-          data: moves.map((a) => a.move?.name),
+          data: moves.map((a) => ({ name: a.move?.name })),
         };
       },
       pokemonFeatureList() {

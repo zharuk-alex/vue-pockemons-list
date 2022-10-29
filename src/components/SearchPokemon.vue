@@ -77,7 +77,7 @@
 
   .base-search-input.input-empty .v-field__append-inner i[role='button'] {
     opacity: 0.7;
-    color: black;
+    color: rgba(0, 0, 0, 0.5);
     pointer-events: none;
   }
 
