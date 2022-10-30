@@ -8,7 +8,7 @@
             :class="[`elevation-${isHovering ? 4 : 1}`]"
             v-bind="props"
           >
-            <v-img :src="item?.src" height="200">
+            <v-img :src="item?.src" height="200" eager>
               <v-card-title
                 class="pa-1 bg-white rounded-xl"
                 v-text="item?.name"
