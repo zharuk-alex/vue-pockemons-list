@@ -1,7 +1,6 @@
 <template>
   <v-card style="background: rgba(255, 255, 255, 0.8)">
     <v-card-text :key="name">
-      name: {{ name }}
       <div v-if="error" class="d-flex flex-column">
         <h3
           class="text-h3 my-10 text-center text-error"
@@ -36,11 +35,11 @@
           v-for="feature in pokemonFeatureList"
           :key="feature?.title"
           cols="12"
-          sm="6"
+          sm="4"
           md="3"
         >
-          <h5 class="text-h5 text-center" v-text="feature?.title"></h5>
-          <v-list density="compact" elevation="1">
+          <v-card-title v-text="feature?.title"></v-card-title>
+          <v-list density="compact" elevation="1" class="rounded">
             <v-list-item v-for="item in feature.data.slice(0, 7)" :key="item">
               <v-list-item-title v-text="item?.name"></v-list-item-title>
               <template v-slot:append>
@@ -60,10 +59,19 @@
               ></v-btn>
             </div>
           </v-list>
-          <div></div>
         </v-col>
       </v-row>
     </v-card-text>
+    <v-card-actions>
+      <v-btn
+        class="mx-auto"
+        color="primary"
+        variant="text"
+        to="/pokemons"
+        v-text="'Show all pokemons'"
+      >
+      </v-btn>
+    </v-card-actions>
   </v-card>
   <v-dialog v-model="dialog" scrollable>
     <v-card style="max-width: 600px; width: auto" v-if="!!dialogItem">

@@ -1,28 +1,23 @@
 <template>
-  <div>
-    <h3 class="text-h3 my-5">Top Pokemons</h3>
-    <TopItems />
-    <TopItems :items="topPokemonsData" :key="requiredItemsLoaded" />
-    <v-divider class="my-12" color="white"></v-divider>
-    <h3 class="text-h3">Pokemons</h3>
-
-    <ItemsList :items="formatedList">
-      <template v-slot:card-actions>
-        <v-btn
-          class="mx-auto"
-          color="primary"
-          variant="text"
-          to="/pokemons"
-          v-text="'Show more...'"
-        >
-        </v-btn>
-      </template>
-    </ItemsList>
-  </div>
+  <h3 class="text-h3 my-5">Top Pokemons</h3>
+  <TopItems :items="topPokemonsData" :key="requiredItemsLoaded" />
+  <v-divider class="my-12" color="white"></v-divider>
+  <h3 class="text-h3 my-5">Pokemons</h3>
+  <ItemsList :items="formatedList">
+    <template v-slot:card-actions>
+      <v-btn
+        class="mx-auto"
+        color="primary"
+        variant="text"
+        to="/pokemons"
+        v-text="'Show more...'"
+      >
+      </v-btn>
+    </template>
+  </ItemsList>
 </template>
 
 <script>
-  import { defineComponent } from 'vue';
   import { createNamespacedHelpers } from 'vuex';
   const { mapGetters, mapActions, mapMutations } =
     createNamespacedHelpers('pokemons');
@@ -33,7 +28,7 @@
   import TopItems from '../components/TopItems.vue';
   import ItemsList from '@/components/ItemsList.vue';
 
-  export default defineComponent({
+  export default {
     name: 'HomeView',
     components: {
       ItemsList,
@@ -95,5 +90,5 @@
         this.getTopPokemons();
       }
     },
-  });
+  };
 </script>
