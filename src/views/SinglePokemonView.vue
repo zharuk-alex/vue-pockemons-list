@@ -51,9 +51,9 @@
             <v-list-item v-for="item in feature.data.slice(0, 7)" :key="item">
               <v-list-item-title v-text="item?.name"></v-list-item-title>
               <template v-slot:append>
-                <v-chip size="x-small" v-if="item?.value">{{
-                  item.value
-                }}</v-chip>
+                <v-chip size="x-small" v-if="item?.value">
+                  {{ item.value }}
+                </v-chip>
               </template>
             </v-list-item>
             <div v-if="feature.data.length > 7">
@@ -77,14 +77,18 @@
       <v-card-title class="d-flex align-center">
         <span>{{ dialogItem.title }}</span>
         <v-spacer></v-spacer>
-        <v-icon large color="primary" @click.stop="closeDialog">
-          mdi-close-circle
+        <v-icon
+          large
+          color="primary"
+          @click.stop="closeDialog"
+          icon="mdi-close-circle"
+        >
         </v-icon>
       </v-card-title>
       <v-divider></v-divider>
       <v-card-text style="max-height: calc(100vh - 200px)">
         <v-chip v-for="item in dialogItem.data" :key="item" class="ma-2">
-          {{ item }}
+          {{ item?.name }}
         </v-chip>
       </v-card-text>
     </v-card>
@@ -100,7 +104,6 @@
     name: 'SinglePokemonView',
     data: () => ({
       name: '',
-      listStatusModel: {},
       dialog: false,
       dialogItem: {},
     }),
@@ -120,7 +123,6 @@
         let abilities = this.pokemon?.abilities || [];
         return {
           title: 'Abilities',
-          value: 'abilities',
           data: abilities.map((a) => ({ name: a.ability?.name })),
         };
       },
@@ -128,7 +130,6 @@
         let stats = this.pokemon?.stats || [];
         return {
           title: 'Stats',
-          value: 'stats',
           data: stats.map((a) => ({ name: a.stat?.name, value: a.base_stat })),
         };
       },
@@ -136,7 +137,6 @@
         let moves = this.pokemon?.moves || [];
         return {
           title: 'Moves',
-          value: 'moves',
           data: moves.map((a) => ({ name: a.move?.name })),
         };
       },

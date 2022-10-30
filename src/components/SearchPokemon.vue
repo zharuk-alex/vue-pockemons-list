@@ -4,27 +4,25 @@
     v-model.trim="searchVal"
     type="text"
     variant="solo"
+    :rules="rules"
     clearable
     placeholder="Find pokemon by {name} or {id}"
     class="base-search-input"
     :class="{ 'input-empty': emptyVal }"
     @click:clear="clearValue"
-    @keypress.enter.stop="SearchPokemon"
+    @keypress.enter="SearchPokemon"
   >
-    <!-- append-inner-icon="mdi-magnify" -->
-    <!-- @click:append-inner="SearchPokemon" -->
     <template v-slot:append-inner>
       <v-btn
         icon="mdi-magnify"
         color="primary"
         size="small"
-        :disabled="emptyVal"
-        class="ml-2"
+        :disabled="emptyVal || !!inputErrors.length"
         @click="SearchPokemon"
+        class="ml-2"
       ></v-btn>
     </template>
   </v-text-field>
-  <span v-show="errorMsg" class="text-error" v-text="errorMsg"></span>
 </template>
 
 <script>
@@ -35,15 +33,20 @@
     name: 'BaseSearch',
     data: () => ({
       searchVal: '',
-      searchError: false,
+      inputErrors: [],
     }),
     computed: {
       ...mapGetters(['pokemonDetail']),
       emptyVal() {
         return !this.searchVal?.length;
       },
-      errorMsg() {
-        return this.searchError ? `"${this.searchVal}" not found` : '';
+      rules() {
+        const rules = [];
+        const rule = (v) =>
+          /^[A-Za-z0-9]*$/.test(v) || `Special characters is not allowed`;
+
+        rules.push(rule);
+        return rules;
       },
     },
     methods: {
@@ -61,6 +64,8 @@
           return false;
         }
 
+        this.$store.commit('setError', null);
+
         this.$router.push({
           name: 'pokemon:detail',
           params: { name: searchVal },
@@ -71,7 +76,7 @@
       },
       clearValue() {
         this.searchVal = '';
-        this.searchError = false;
+        this.inputErrors = [];
       },
       blurInput() {
         const searchEl = this.$refs['search-input']?.$el;
@@ -79,12 +84,16 @@
         searchInput.blur();
       },
     },
+    watch: {
+      searchVal(newVal) {
+        this.inputErrors = this.rules.filter((r) => r(newVal)?.length);
+      },
+    },
   };
 </script>
 <style>
   .base-search-input {
     max-width: 380px;
-    width: auto;
   }
 
   .base-search-input .v-field {
@@ -95,18 +104,4 @@
     align-items: center !important;
     padding-top: 0 !important;
   }
-
-  /* .base-search-input .v-field__append-inner i[role='button'] {
-    color: blue;
-  }
-
-  .base-search-input.input-empty .v-field__append-inner i[role='button'] {
-    opacity: 0.7;
-    color: rgba(0, 0, 0, 0.5);
-    pointer-events: none;
-  }
-
-  .base-search-input.input-empty .v-field__append-inner:hover {
-    cursor: not-allowed !important;
-  } */
 </style>

@@ -49,9 +49,7 @@ export default {
     }
   },
   actions: {
-    async fetchList({ commit }, { limit, offset }) {
-      limit = limit || 12;
-      offset = offset || 0;
+    async fetchList({ commit }, { limit = 12, offset = 0 }) {
       commit('setAppLoader', true);
       return axios
         .get(`${BASE_API_URL}/pokemon`, {
