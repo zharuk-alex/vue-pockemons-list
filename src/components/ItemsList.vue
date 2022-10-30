@@ -1,17 +1,30 @@
 <template>
-  <v-card style="background: rgba(255, 255, 255, 0.6)" class="w-100 h-100">
+  <v-card style="background: rgba(255, 255, 255, 0.6)">
     <v-card-text>
       <v-row>
-        <v-col
-          cols="6"
-          sm="4"
-          md="3"
-          v-for="(item, index) in items"
-          :key="item.id"
-          :class="{ 'mx-auto': index == items.length - 1 }"
-        >
-          <ItemCard :item="item" />
-        </v-col>
+        <template v-if="!items.length && appLoader">
+          <v-col v-for="n in 4" :key="n" cols="6" sm="4" md="3">
+            <v-sheet
+              elevation="4"
+              height="280"
+              color="grey lighten-4"
+              class="pa-3"
+            >
+            </v-sheet>
+          </v-col>
+        </template>
+        <template v-else-if="items.length">
+          <v-col
+            cols="6"
+            sm="4"
+            md="3"
+            v-for="(item, index) in items"
+            :key="item.id"
+            :class="{ 'mx-auto': index == items.length - 1 }"
+          >
+            <ItemCard :item="item" />
+          </v-col>
+        </template>
       </v-row>
     </v-card-text>
     <v-card-actions v-if="!!$slots['card-actions']">
@@ -33,6 +46,11 @@
     },
     components: {
       ItemCard,
+    },
+    computed: {
+      appLoader() {
+        return this.$store.getters['pokemons/appLoader'];
+      },
     },
   };
 </script>
