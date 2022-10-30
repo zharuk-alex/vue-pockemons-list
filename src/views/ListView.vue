@@ -1,17 +1,18 @@
 <template>
   <v-row>
-    <v-col>
+    <v-col cols="12">
       <h3 class="text-h3">Pokemons</h3>
     </v-col>
-    <ItemsList :items="formatedList" />
-    <v-col cols="12" sm="8" lg="6" class="mx-auto">
-      <BasePagination
-        v-if="totalListPages > 1"
-        :length="totalListPages"
-        v-model.sync="pageCurrent"
-      />
-    </v-col>
   </v-row>
+
+  <ItemsList :items="formatedList" />
+  <v-col cols="12" sm="8" lg="6" class="mx-auto">
+    <BasePagination
+      v-if="totalListPages > 1"
+      :length="totalListPages"
+      v-model.sync="pageCurrent"
+    />
+  </v-col>
 </template>
 
 <script>

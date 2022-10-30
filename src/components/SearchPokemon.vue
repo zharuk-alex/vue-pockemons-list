@@ -65,7 +65,7 @@
         }
 
         this.$store.commit('setError', null);
-
+        console.log('router push');
         this.$router.push({
           name: 'pokemon:detail',
           params: { name: searchVal },
