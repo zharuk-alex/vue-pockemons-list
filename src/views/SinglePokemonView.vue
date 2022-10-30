@@ -1,6 +1,7 @@
 <template>
   <v-card style="background: rgba(255, 255, 255, 0.8)">
-    <v-card-text>
+    <v-card-text :key="name">
+      name: {{ name }}
       <div v-if="error" class="d-flex flex-column">
         <h3
           class="text-h3 my-10 text-center text-error"
@@ -39,15 +40,7 @@
           md="3"
         >
           <h5 class="text-h5 text-center" v-text="feature?.title"></h5>
-          <v-list
-            density="compact"
-            style="
-              background-color: rgba(0, 0, 0, 0.1);
-              overflow-y: hidden;
-              max-height: 300;
-            "
-            elevation="1"
-          >
+          <v-list density="compact" elevation="1">
             <v-list-item v-for="item in feature.data.slice(0, 7)" :key="item">
               <v-list-item-title v-text="item?.name"></v-list-item-title>
               <template v-slot:append>

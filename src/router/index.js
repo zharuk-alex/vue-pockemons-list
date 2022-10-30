@@ -35,20 +35,18 @@ const routes = [
       const { name } = to.params
       store.commit('setError', null)
       const nameIsID = /^-?\d+$/.test(name);
+
+      let pokemon = store.getters['pokemons/pokemonDetail'](name);
+      if (!pokemon) {
+        pokemon = await store.dispatch('pokemons/fetchSinglePokemon', name)
+        pokemon = store.getters['pokemons/pokemonDetail'](name);
+      }
       if (nameIsID) {
-        let pokemon = store.getters['pokemons/pokemonDetail'](name);
-        if (!pokemon) {
-          await store.dispatch('pokemons/fetchSinglePokemon', name)
-          pokemon = store.getters['pokemons/pokemonDetail'](name);
-          if (pokemon?.name) {
-            to.params.name = pokemon?.name;
-            next(to)
-          } else {
-            next()
-          }
-        } else {
+        if (pokemon) {
           to.params.name = pokemon?.name;
           next(to)
+        } else {
+          next()
         }
       } else {
         next()
