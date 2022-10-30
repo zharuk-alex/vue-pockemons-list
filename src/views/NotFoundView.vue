@@ -18,9 +18,7 @@
 <script>
   export default {
     name: 'PageNotFound',
-    components: {
-      BaseLayout,
-    },
+
     data: () => ({
       msg: `Page Not Found`,
     }),
