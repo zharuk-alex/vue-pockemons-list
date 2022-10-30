@@ -1,17 +1,29 @@
 <template>
   <v-text-field
+    ref="search-input"
     v-model.trim="searchVal"
     type="text"
     variant="solo"
     clearable
     placeholder="Find pokemon by {name} or {id}"
-    append-inner-icon="mdi-magnify"
     class="base-search-input"
     :class="{ 'input-empty': emptyVal }"
     @click:clear="clearValue"
-    @click:append-inner="SearchPokemon"
     @keypress.enter.stop="SearchPokemon"
-  ></v-text-field>
+  >
+    <!-- append-inner-icon="mdi-magnify" -->
+    <!-- @click:append-inner="SearchPokemon" -->
+    <template v-slot:append-inner>
+      <v-btn
+        icon="mdi-magnify"
+        color="primary"
+        size="small"
+        :disabled="emptyVal"
+        class="ml-2"
+        @click="SearchPokemon"
+      ></v-btn>
+    </template>
+  </v-text-field>
   <span v-show="errorMsg" class="text-error" v-text="errorMsg"></span>
 </template>
 
@@ -53,10 +65,18 @@
           name: 'pokemon:detail',
           params: { name: searchVal },
         });
+
+        this.blurInput();
+        this.clearValue();
       },
       clearValue() {
         this.searchVal = '';
         this.searchError = false;
+      },
+      blurInput() {
+        const searchEl = this.$refs['search-input']?.$el;
+        const searchInput = searchEl.querySelector('.v-field__input');
+        searchInput.blur();
       },
     },
   };
@@ -71,7 +91,12 @@
     border-radius: 30px !important;
   }
 
-  .base-search-input .v-field__append-inner i[role='button'] {
+  .v-field__append-inner {
+    align-items: center !important;
+    padding-top: 0 !important;
+  }
+
+  /* .base-search-input .v-field__append-inner i[role='button'] {
     color: blue;
   }
 
@@ -83,5 +108,5 @@
 
   .base-search-input.input-empty .v-field__append-inner:hover {
     cursor: not-allowed !important;
-  }
+  } */
 </style>

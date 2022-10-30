@@ -49,25 +49,25 @@
             elevation="1"
           >
             <v-list-item v-for="item in feature.data.slice(0, 7)" :key="item">
-              <v-list-item-content class="d-flex w-100">
-                <span v-text="item?.name"></span>
-                <v-spacer></v-spacer>
+              <v-list-item-title v-text="item?.name"></v-list-item-title>
+              <template v-slot:append>
                 <v-chip size="x-small" v-if="item?.value">{{
                   item.value
                 }}</v-chip>
-              </v-list-item-content>
+              </template>
             </v-list-item>
+            <div v-if="feature.data.length > 7">
+              <v-list-item>...</v-list-item>
+              <v-btn
+                class="mx-auto"
+                color="primary"
+                variant="text"
+                @click="showDialog(feature)"
+                v-text="`Show all ${feature.title}`"
+              ></v-btn>
+            </div>
           </v-list>
-          <div v-if="feature.data.length > 7">
-            <v-list-item>...</v-list-item>
-            <v-btn
-              class="mx-auto"
-              color="primary"
-              variant="text"
-              @click="showDialog(feature)"
-              v-text="`Show all ${feature.title}`"
-            ></v-btn>
-          </div>
+          <div></div>
         </v-col>
       </v-row>
     </v-card-text>

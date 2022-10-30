@@ -1,6 +1,6 @@
 <template>
   <v-row>
-    <v-col v-for="item in items" :key="item?.id" class="pa-5">
+    <v-col v-for="item in items" :key="item?.id" cols="4">
       <router-link :to="`/pokemons/${item?.name}`">
         <v-hover v-slot="{ isHovering, props }">
           <v-card
