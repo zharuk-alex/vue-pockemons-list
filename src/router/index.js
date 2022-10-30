@@ -34,8 +34,26 @@ const routes = [
     beforeEnter: (async (to, from, next) => {
       const { name } = to.params
       store.commit('setError', null)
-      !!store.getters['pokemons/pokemonDetail'](name) || (await store.dispatch('pokemons/fetchSinglePokemon', name));
-      next()
+      const nameIsID = /^-?\d+$/.test(name);
+      if (nameIsID) {
+        let pokemon = store.getters['pokemons/pokemonDetail'](name);
+        if (!pokemon) {
+          await store.dispatch('pokemons/fetchSinglePokemon', name)
+          pokemon = store.getters['pokemons/pokemonDetail'](name);
+          if (pokemon?.name) {
+            to.params.name = pokemon?.name;
+            next(to)
+          } else {
+            next()
+          }
+        } else {
+          to.params.name = pokemon?.name;
+          next(to)
+        }
+      } else {
+        next()
+      }
+
     }),
     meta: {
       breadCrumb(route) {
