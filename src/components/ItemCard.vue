@@ -38,7 +38,7 @@
     },
     computed: {
       imageDefaultSrc() {
-        return `https://via.placeholder.com/${this.imageDefaultSrc}`;
+        return `https://via.placeholder.com/${this.imageSize}`;
       },
     },
   };
