@@ -60,19 +60,21 @@
         const theSame =
           currentPokemon?.name == searchVal || currentPokemon?.id == searchVal;
 
-        if (this.emptyVal || theSame) {
+        if (this.emptyVal || theSame || this.inputErrors.length) {
           return false;
         }
 
-        this.$store.commit('setError', null);
+        this.blurInput();
 
-        this.$router.push({
-          name: 'pokemon:detail',
-          params: { name: searchVal },
+        this.$nextTick(() => {
+          this.$router.push({
+            name: 'pokemon:detail',
+            params: { name: searchVal },
+          });
         });
 
-        this.blurInput();
         this.clearValue();
+        this.$store.commit('setError', null);
       },
       clearValue() {
         this.searchVal = '';
