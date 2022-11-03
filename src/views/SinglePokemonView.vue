@@ -6,13 +6,6 @@
           class="text-h3 my-10 text-center text-error"
           v-text="`'${name}' - ${error}`"
         ></h3>
-        <v-btn
-          class="mx-auto"
-          color="primary"
-          variant="text"
-          to="/pokemons"
-          v-text="'Show all pokemons'"
-        ></v-btn>
       </div>
 
       <v-row v-else>

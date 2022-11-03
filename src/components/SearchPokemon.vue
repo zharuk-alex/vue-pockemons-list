@@ -42,10 +42,18 @@
       },
       rules() {
         const rules = [];
-        const rule = (v) =>
-          /^[A-Za-z0-9]*$/.test(v) || `Special characters is not allowed`;
 
-        rules.push(rule);
+        let ruleChars = (v) =>
+          /^[A-Za-z0-9]*$/.test(v) || `Special characters is not allowed`;
+        if (ruleChars) {
+          rules.push(ruleChars);
+        }
+
+        let ruleMaxChars = (v) => v.length <= 10 || 'Max 10 characters';
+        if (ruleMaxChars) {
+          rules.push(ruleMaxChars);
+        }
+
         return rules;
       },
     },
@@ -53,10 +61,11 @@
       async SearchPokemon() {
         let searchVal = this.searchVal.toString().toLowerCase();
         let currentPokemon;
-        let routeNameParam = this.$route.params?.name;
-        if (routeNameParam) {
-          currentPokemon = this.pokemonDetail(routeNameParam);
+        let { name } = this.$route.params;
+        if (name) {
+          currentPokemon = this.pokemonDetail(name);
         }
+
         const theSame =
           currentPokemon?.name == searchVal || currentPokemon?.id == searchVal;
 
