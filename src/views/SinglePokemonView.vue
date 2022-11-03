@@ -1,12 +1,11 @@
 <template>
   <v-card style="background: rgba(255, 255, 255, 0.8)">
     <v-card-text :key="name">
-      <div v-if="error" class="d-flex flex-column">
-        <h3
-          class="text-h3 my-10 text-center text-error"
-          v-text="`'${name}' - ${error}`"
-        ></h3>
-      </div>
+      <h3
+        v-if="error"
+        class="text-h3 my-10 text-center text-error"
+        v-text="`'${name}' - ${error}`"
+      ></h3>
 
       <v-row v-else>
         <v-col cols="12" md="3">
@@ -48,7 +47,7 @@
                 color="primary"
                 variant="text"
                 @click="showDialog(feature)"
-                v-text="`Show all ${feature.title}`"
+                v-text="`Show all ${feature?.title}`"
               ></v-btn>
             </div>
           </v-list>
@@ -69,7 +68,7 @@
   <v-dialog v-model="dialog" scrollable>
     <v-card style="max-width: 600px; width: auto" v-if="!!dialogItem">
       <v-card-title class="d-flex align-center">
-        <span>{{ dialogItem.title }}</span>
+        <span>{{ dialogItem?.title }}</span>
         <v-spacer></v-spacer>
         <v-icon
           large
@@ -160,14 +159,16 @@
         }
 
         let pokemon = this.pokemonDetail(name);
+        const nameIsID = /^-?\d+$/.test(name);
         if (!pokemon) {
           await this.fetchSinglePokemon(name);
-        }
-        const nameIsID = /^-?\d+$/.test(name);
-        if (nameIsID) {
           pokemon = this.pokemonDetail(name);
-          this.$router.replace({ params: { name: pokemon.name } });
         }
+
+        if (nameIsID) {
+          this.$router.replace({ params: { name: pokemon?.name } });
+        }
+
         this.name = name;
       },
     },
